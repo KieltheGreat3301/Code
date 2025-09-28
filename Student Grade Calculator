@@ -18,18 +18,105 @@ void programTitle(const string& title) {
 void profileSetup(const string& title) {
     cout << "===" << title << "==="  << endl;
 }
+float findHighest(float g1, float g2, float g3, float g4, float g5) {
+    float max = g1;
+    if (g2 > max) max = g2;
+    if (g3 > max) max = g3;
+    if (g4 > max) max = g4;
+    if (g5 > max) max = g5;
+    return max;
+}
+
+float findLowest(float g1, float g2, float g3, float g4, float g5) {
+    float min = g1;
+    if (g2 < min) min = g2;
+    if (g3 < min) min = g3;
+    if (g4 < min) min = g4;
+    if (g5 < min) min = g5;
+    return min;
+}
+
+float getGrade(float average) {
+    if (average >= 96 && average <= 100) return 1.0;
+    else if (average >= 94) return 1.25;
+    else if (average >= 92) return 1.5;
+    else if (average >= 90) return 1.75;
+    else if (average >= 88) return 2.0;
+    else if (average >= 86) return 2.25;
+    else if (average >= 84) return 2.5;
+    else if (average >= 82) return 2.75;
+    else if (average >= 80) return 3.0;
+    else return 5.0; // Below 80
+}
+
+int countPassing(float g1, float g2, float g3, float g4, float g5) {
+    int count = 0;
+    if (g1 >= 60) count++;
+    if (g2 >= 60) count++;
+    if (g3 >= 60) count++;
+    if (g4 >= 60) count++;
+    if (g5 >= 60) count++;
+    return count;
+}
 
 int main() {
     string studentName, studentID;
     int studentAge, gradeLevel;
-    double mathGrade, scienceGrade, englishGrade, historyGrade, artGrade;
-    
+    float mathGrade, scienceGrade, englishGrade, historyGrade, artGrade;
+
     programTitle("STUDENT GRADE CALCULATOR");
     profileSetup("STUDENT PROFILE SETUP");
-    
+
     cout << "Enter student name: ";
     getline(cin, studentName);
-    
-    
+
+    cout << "Enter student ID: ";
+    getline(cin, studentID);
+
+    cout << "Enter student age: ";
+    cin >> studentAge;
+
+    cout << "Enter grade level: ";
+    cin >> gradeLevel;
+
+    cout << "\n=== Enter Subject Grades (0-100) ===\n";
+    cout << "Math: ";
+    cin >> mathGrade;
+    cout << "Science: ";
+    cin >> scienceGrade;
+    cout << "English: ";
+    cin >> englishGrade;
+    cout << "History: ";
+    cin >> historyGrade;
+    cout << "Art: ";
+    cin >> artGrade;
+
+    float avg = calculateAverage(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
+    float high = findHighest(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
+    float low = findLowest(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
+    float gradeEquivalent = getGrade(avg);
+    int passCount = countPassing(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
+
+    cout << "\n========================================\n";
+    cout << "          STUDENT REPORT CARD\n";
+    cout << "========================================\n";
+    cout << "Name       : " << studentName << endl;
+    cout << "ID         : " << studentID << endl;
+    cout << "Age        : " << studentAge << endl;
+    cout << "Grade Level: " << gradeLevel << endl;
+    cout << "\n--- Subject Grades ---\n";
+    cout << "Math    : " << mathGrade << endl;
+    cout << "Science : " << scienceGrade << endl;
+    cout << "English : " << englishGrade << endl;
+    cout << "History : " << historyGrade << endl;
+    cout << "Art     : " << artGrade << endl;
+
+    cout << "\n--- Statistics ---\n";
+    cout << "Average Grade      : " << avg << endl;
+    cout << "Highest Grade      : " << high << endl;
+    cout << "Lowest Grade       : " << low << endl;
+    cout << "Passing Subjects   : " << passCount << " / " << numSubjects << endl;
+    cout << "Grade Equivalent   : " << gradeEquivalent << endl;
+
     return 0;
 }
