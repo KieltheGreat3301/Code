@@ -1,24 +1,19 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
 using namespace std;
 
-const int numSubjects = 5;
+// Constant values
+const int numSubjects = 5; // Number of subjects to compute for average
+const int year = 2024; // Current year (for calculating birth year)
 
-float calculateAverage(float g1, float g2, float g3, float g4, float g5) {
+// Function to calculate the average grade of 5 subjects
+double calculateAverage(double g1, double g2, double g3, double g4, double g5) {
     return (g1 + g2 + g3 + g4 + g5) / numSubjects;
 }
 
-void programTitle(const string& title) {
-    cout << "========================================" << endl;
-    cout << "   " << title << endl;
-    cout << "========================================" << endl;
-    cout << "" << endl;
-}
-
-void profileSetup(const string& title) {
-    cout << "===" << title << "==="  << endl;
-}
-float findHighest(float g1, float g2, float g3, float g4, float g5) {
+// Function to find the highest grade of 5 subjects
+double findHighest(double g1, double g2, double g3, double g4, double g5) {
     float max = g1;
     if (g2 > max) max = g2;
     if (g3 > max) max = g3;
@@ -27,7 +22,8 @@ float findHighest(float g1, float g2, float g3, float g4, float g5) {
     return max;
 }
 
-float findLowest(float g1, float g2, float g3, float g4, float g5) {
+// Function to find the lowest grade of 5 subjects
+double findLowest(double g1, double g2, double g3, double g4, double g5) {
     float min = g1;
     if (g2 < min) min = g2;
     if (g3 < min) min = g3;
@@ -36,7 +32,19 @@ float findLowest(float g1, float g2, float g3, float g4, float g5) {
     return min;
 }
 
-float getGrade(float average) {
+// Function to count how many subjects are passing (>= 60)
+int countPassing(double g1, double g2, double g3, double g4, double g5) {
+    int count = 0;
+    if (g1 >= 60) count++;
+    if (g2 >= 60) count++;
+    if (g3 >= 60) count++;
+    if (g4 >= 60) count++;
+    if (g5 >= 60) count++;
+    return count;
+}
+
+// Convert numeric average to equivalent grade
+double getGrade(double average) {
     if (average >= 96 && average <= 100) return 1.0;
     else if (average >= 94) return 1.25;
     else if (average >= 92) return 1.5;
@@ -49,74 +57,133 @@ float getGrade(float average) {
     else return 5.0; // Below 80
 }
 
-int countPassing(float g1, float g2, float g3, float g4, float g5) {
-    int count = 0;
-    if (g1 >= 60) count++;
-    if (g2 >= 60) count++;
-    if (g3 >= 60) count++;
-    if (g4 >= 60) count++;
-    if (g5 >= 60) count++;
-    return count;
+// Function to compute GWA (General Weighted Average)
+// Uses a linear scale between 1.0 and 5.0
+double convertToGWA(double grade) {
+    if (grade >= 96) return 1.0;     // Highest
+    else if (grade >= 80) {
+        return 1.0 + (100 - grade) * 0.1; // Linear scale
+    } else {
+        return 5.0; // Below 80 = failed
+    }
+}
+
+// Function to compute the birth year
+int calculateBirthYear(int age) {
+    return year - age;
+}
+
+// Function that checks if the grade input is between 0-100
+double validateGrade(const string& subject) {
+    double grade;
+
+    do {
+        cout << "Enter " << subject << " grade (0-100): ";
+        cin >> grade;
+
+        if (cin.fail()) {
+            cin.clear();               // reset fail state
+            cin.ignore(1000, '\n');    // discard invalid input
+            cout << "Invalid input! Please enter a number between 0 and 100.\n";
+            grade = -1;                // force loop to continue
+        }
+        else if (grade < 0 || grade > 100) {
+            cout << "Invalid grade! Please enter a value between 0 and 100.\n";
+        }
+
+    } while (grade < 0 || grade > 100);
+    
+    return grade;
+}
+    
+// Function to display a formatted banner    
+void displayBanner(const string& title) {
+    cout << " " << endl;
+    cout << "========================================" << endl;
+    cout << "   " << title << endl;
+    cout << "========================================" << endl;
+    cout << " " << endl;
 }
 
 int main() {
+    // Student details
     string studentName, studentID;
     int studentAge, gradeLevel;
-    float mathGrade, scienceGrade, englishGrade, historyGrade, artGrade;
-
-    programTitle("STUDENT GRADE CALCULATOR");
-    profileSetup("STUDENT PROFILE SETUP");
-
+    
+    // Grades for 5 subjects
+    double mathGrade, scienceGrade, englishGrade, historyGrade, artGrade;
+    
+    displayBanner("STUDENT GRADE CALCULATOR");
+    
+    // ---Student Profile Setup---
+    cout << "=== STUDENT PROFILE SETUP ===" << endl ;
     cout << "Enter student name: ";
     getline(cin, studentName);
-
     cout << "Enter student ID: ";
-    getline(cin, studentID);
-
+    cin >> studentID;
     cout << "Enter student age: ";
     cin >> studentAge;
-
     cout << "Enter grade level: ";
     cin >> gradeLevel;
-
-    cout << "\n=== Enter Subject Grades (0-100) ===\n";
-    cout << "Math: ";
-    cin >> mathGrade;
-    cout << "Science: ";
-    cin >> scienceGrade;
-    cout << "English: ";
-    cin >> englishGrade;
-    cout << "History: ";
-    cin >> historyGrade;
-    cout << "Art: ";
-    cin >> artGrade;
-
-    float avg = calculateAverage(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
-    float high = findHighest(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
-    float low = findLowest(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
-    float gradeEquivalent = getGrade(avg);
+    
+    // Calculate birth year
+    int birthYear = calculateBirthYear(studentAge);
+    
+    cout << "\nProfile created successfully!\n";
+    
+    // ---Entering grades---
+    cout << "\n=== GRADE ENTRY ===\n";
+    mathGrade = validateGrade("Math");
+    scienceGrade = validateGrade("Science");
+    englishGrade = validateGrade("English");
+    historyGrade = validateGrade("History");
+    artGrade = validateGrade("Art");
+    
+    cout << "\nGrades recorded successfully!\n";
+    
+    // ---Student report card output---
+    displayBanner("STUDENT REPORT CARD");
+    
+    cout << "STUDENT INFORMATION:\n";
+    cout << "Name: " << studentName << endl;
+    cout << "ID: " << studentID << endl;
+    cout << "Age: " << studentAge << " years old" << endl;
+    cout << "Grade Level: " << gradeLevel << "th grade" << endl;
+    cout << "Birth Year: " << birthYear << endl;
+    
+    cout << "\nSUBJECT GRADES:" << endl;
+    cout << "Math: " << mathGrade << endl;
+    cout << "Science: " << scienceGrade << endl;
+    cout << "English: " << englishGrade << endl;
+    cout << "History: " << historyGrade << endl;
+    cout << "Art: " << artGrade << endl;
+    
+    // ---Statistics---
+    double average = calculateAverage(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
+    double equivalent = getGrade(average);
+    double highest = findHighest(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
+    double lowest = findLowest(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
     int passCount = countPassing(mathGrade, scienceGrade, englishGrade, historyGrade, artGrade);
-
-    cout << "\n========================================\n";
-    cout << "          STUDENT REPORT CARD\n";
-    cout << "========================================\n";
-    cout << "Name       : " << studentName << endl;
-    cout << "ID         : " << studentID << endl;
-    cout << "Age        : " << studentAge << endl;
-    cout << "Grade Level: " << gradeLevel << endl;
-    cout << "\n--- Subject Grades ---\n";
-    cout << "Math    : " << mathGrade << endl;
-    cout << "Science : " << scienceGrade << endl;
-    cout << "English : " << englishGrade << endl;
-    cout << "History : " << historyGrade << endl;
-    cout << "Art     : " << artGrade << endl;
-
-    cout << "\n--- Statistics ---\n";
-    cout << "Average Grade      : " << avg << endl;
-    cout << "Highest Grade      : " << high << endl;
-    cout << "Lowest Grade       : " << low << endl;
-    cout << "Passing Subjects   : " << passCount << " / " << numSubjects << endl;
-    cout << "Grade Equivalent   : " << gradeEquivalent << endl;
-
+    double GWA = convertToGWA(average);
+    
+    cout << "\nGRADE STATISTICS:" << endl;
+    cout << "Average Grade: " << fixed << setprecision(2) << average << endl;
+    cout << "Grade Equivalent: " << fixed << setprecision(2) << equivalent << endl;
+    cout << "Highest Grade: " << fixed << setprecision(2) << highest << endl;
+    cout << "Lowest Grade: " << fixed << setprecision(2) << lowest << endl;
+    cout << "Subjects Passing: " << passCount << " out of 5" <<  endl;
+    
+    // ---GWA and Director's List Status---
+    cout << "\nGWA: " << fixed << setprecision(2) << GWA << endl;
+    cout << "Director's List Status: ";
+    if (GWA <= 1.5) {
+        cout << "Yes" << endl;
+        cout << "🎉 Congratulations! You made it to the Director's List!" << endl;
+    } else {
+        cout << "No" << endl;
+        cout << "Keep trying! Work harder next time and you can achieve it 💪" << endl;
+    }
+    cout << "\n========================================";
+    
     return 0;
 }
