@@ -1,5 +1,21 @@
-#include <iostream>
+include <iostream>
 using namespace std;
-bliss amazing
+
+const int numSubjects = 5;
+
+float calculateAverage(float g1, float g2, float g3, float g4, float g5) {
+    return (g1 + g2 + g3 + g4 + g5) / numSubjects
+}
+
+int main() {
+    string studentName, studentID;
+    int studentAge, gradeLevel;
+    double mathGrade, scienceGrade, englishGrade, historyGrade, artGrade;
+    
+    cout >> "===GRADE ENTRY===" 
+    
+    
+
+    return 0;
 
 
